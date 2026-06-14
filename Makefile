@@ -1,6 +1,9 @@
-.PHONY: up down logs dev health migrate seed restart ps build pull
+.PHONY: up down logs dev prod health migrate seed restart ps build pull
 
-# Start all containers in detached mode
+DC_DEV = docker compose -f docker-compose.yml -f docker-compose.dev.yml
+DC_PROD = docker compose -f docker-compose.yml -f docker-compose.prod.yml
+
+# Start all containers in detached mode (base only)
 up:
 	docker compose up -d
 
@@ -12,17 +15,25 @@ down:
 logs:
 	docker compose logs -f $(s)
 
-# Build images + start all (dev workflow)
+# Dev workflow: hot-reload bind mounts + development build
 dev:
-	docker compose up -d --build
+	$(DC_DEV) up -d --build
+
+# Prod workflow: production build, no bind mounts
+prod:
+	$(DC_PROD) up -d --build
 
 # Health check
 health:
-	@curl -sf http://localhost/api/health | python -m json.tool || echo "Health check FAILED"
+	@curl -sf http://localhost/api/health | python3 -m json.tool 2>/dev/null || curl -sf http://localhost/api/health || echo "Health check FAILED"
+
+# Run Prisma db push (dev - no migration files needed)
+db-push:
+	docker compose exec backend npx prisma db push
 
 # Run Prisma migrations inside backend container
 migrate:
-	docker compose exec backend npx prisma migrate dev
+	docker compose exec backend npx prisma migrate deploy
 
 # Run seed script inside backend container
 seed:

@@ -1,0 +1,13 @@
+# Development overrides — adds hot-reload bind mounts
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+services:
+  backend:
+    volumes:
+      - ../Trello-Clone-Backend:/app
+      - /app/node_modules
+
+  frontend:
+    volumes:
+      - ../Trello-Clone-Frontend:/app
+      - /app/node_modules
+      - /app/.next

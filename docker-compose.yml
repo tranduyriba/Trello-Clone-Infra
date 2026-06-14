@@ -61,9 +61,6 @@ services:
       API_URL: ${API_URL:-http://localhost/api}
     ports:
       - "3001:3001"
-    volumes:
-      - ../Trello-Clone-Backend:/app
-      - /app/node_modules
     depends_on:
       postgres:
         condition: service_healthy
@@ -82,10 +79,6 @@ services:
       NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL:-http://localhost}
     ports:
       - "3000:3000"
-    volumes:
-      - ../Trello-Clone-Frontend:/app
-      - /app/node_modules
-      - /app/.next
     depends_on:
       - backend
 
