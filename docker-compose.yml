@@ -82,6 +82,17 @@ services:
     depends_on:
       - backend
 
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: trello_redisinsight
+    restart: unless-stopped
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight_data:/data
+    depends_on:
+      - redis
+
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: trello_pgadmin
@@ -115,3 +126,4 @@ volumes:
   postgres_data:
   redis_data:
   pgadmin_data:
+  redisinsight_data:

@@ -14,6 +14,9 @@ services:
     volumes: []
     restart: always
 
+  redisinsight:
+    restart: always
+
   pgadmin:
     restart: always
 
