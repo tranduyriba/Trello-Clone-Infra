@@ -82,6 +82,23 @@ services:
     depends_on:
       - backend
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: trello_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@ribateam.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-pgadmin_secret}
+      PGADMIN_CONFIG_SERVER_MODE: "True"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   nginx:
     image: nginx:alpine
     container_name: trello_nginx
@@ -97,3 +114,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  pgadmin_data:
